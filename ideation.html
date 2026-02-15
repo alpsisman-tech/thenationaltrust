@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ideation & Digital Solutions | National Trust Digital Strategy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        /* ══════════════════════════════════════════
+           SHARED DESIGN SYSTEM — Heritage Editorial
+           ══════════════════════════════════════════ */
+        :root {
+            --primary-dark: #1B3A2F;
+            --primary-forest: #2E5841;
+            --primary-sage: #4A6F5C;
+            --accent-rust: #B85C3A;
+            --accent-gold: #C9A961;
+            --accent-terracotta: #D4725C;
+            --neutral-cream: #FAF7F2;
+            --neutral-warm: #F5F0EA;
+            --neutral-light: #FDFCFA;
+            --neutral-gray: #8C8579;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4A4A4A;
+            --shadow-sm: 0 1px 3px rgba(27,58,47,0.04), 0 4px 12px rgba(27,58,47,0.06);
+            --shadow-md: 0 2px 6px rgba(27,58,47,0.05), 0 8px 24px rgba(27,58,47,0.10);
+            --shadow-lg: 0 4px 12px rgba(27,58,47,0.06), 0 16px 48px rgba(27,58,47,0.14);
+            --shadow-xl: 0 8px 20px rgba(27,58,47,0.08), 0 24px 60px rgba(27,58,47,0.16);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--neutral-cream);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Grain texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ─── Navigation ─── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(253, 252, 250, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(74, 111, 92, 0.08);
+            z-index: 1000;
+            transition: all 0.5s var(--ease-out);
+        }
+        .navbar.scrolled {
+            box-shadow: 0 1px 0 rgba(74,111,92,0.06), var(--shadow-sm);
+            background: rgba(253, 252, 250, 0.97);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.15rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand { display: flex; flex-direction: column; text-decoration: none; }
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            letter-spacing: -0.02em;
+        }
+        .brand-subtitle {
+            font-size: 0.62rem;
+            color: var(--neutral-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-weight: 600;
+            margin-top: 0.15rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.35rem;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            transition: all 0.3s var(--ease-out);
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent-rust);
+            border-radius: 2px;
+            transition: width 0.35s var(--ease-out);
+        }
+        .nav-menu a:hover { color: var(--accent-rust); }
+        .nav-menu a:hover::after { width: 60%; }
+        .nav-menu a.active { color: var(--accent-rust); }
+        .nav-menu a.active::after { width: 60%; }
+
+        /* ─── Page Header ─── */
+        .page-header {
+            margin-top: 72px;
+            position: relative;
+            background:
+                radial-gradient(ellipse 80% 60% at 25% 75%, rgba(201,169,97,0.12), transparent),
+                radial-gradient(ellipse 60% 70% at 80% 20%, rgba(184,92,58,0.08), transparent),
+                linear-gradient(160deg, #0d2319 0%, var(--primary-dark) 35%, var(--primary-forest) 100%);
+            padding: 6rem 3rem 5rem;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, var(--neutral-cream), transparent);
+            pointer-events: none;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+            animation: fadeInDown 0.8s ease both;
+        }
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+            line-height: 1.75;
+            animation: fadeInDown 0.8s 0.15s ease both;
+        }
+
+        /* ─── Main Content ─── */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 3rem;
+        }
+
+        .section-intro {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 4rem;
+        }
+        .section-intro h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+        }
+        .section-intro p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* ─── Solutions Grid ─── */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 5rem;
+        }
+
+        .solution-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.5s var(--ease-out);
+            border: 1px solid rgba(74,111,92,0.06);
+            position: relative;
+        }
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-sage), var(--primary-forest));
+            z-index: 1;
+        }
+        .solution-card.selected {
+            border-color: rgba(46,88,65,0.2);
+            box-shadow: 0 4px 12px rgba(46,88,65,0.08), 0 16px 48px rgba(46,88,65,0.18);
+        }
+        .solution-card.selected::before {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-forest), var(--accent-gold));
+        }
+        .solution-card.selected .solution-header {
+            background: linear-gradient(135deg, rgba(74,111,92,0.1) 0%, rgba(46,88,65,0.04) 100%);
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .solution-header {
+            background: linear-gradient(135deg, var(--neutral-warm) 0%, var(--neutral-light) 100%);
+            padding: 2.25rem 2.25rem 1.75rem;
+            border-bottom: 1px solid rgba(74,111,92,0.08);
+        }
+
+        .solution-type {
+            display: inline-block;
+            padding: 0.35rem 0.9rem;
+            background: var(--primary-sage);
+            color: white;
+            border-radius: 100px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            margin-bottom: 1.1rem;
+        }
+        .solution-type.ai { background: var(--accent-gold); color: var(--primary-dark); }
+        .solution-type.selected { background: var(--accent-terracotta); }
+
+        .solution-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        .solution-tagline {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .solution-content {
+            padding: 2.25rem;
+        }
+        .solution-content h5 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .solution-content p {
+            font-size: 0.92rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1.35rem;
+        }
+
+        .solution-features {
+            background: var(--neutral-warm);
+            padding: 1.35rem 1.5rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.35rem;
+            border: 1px solid rgba(74,111,92,0.06);
+        }
+        .solution-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .solution-features li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+            padding-left: 1.35rem;
+            position: relative;
+            line-height: 1.65;
+        }
+        .solution-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-rust);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 1rem;
+            margin: 1.25rem 0;
+        }
+        .info-item {
+            background: var(--neutral-warm);
+            padding: 1.15rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(74,111,92,0.05);
+        }
+        .info-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--neutral-gray);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .info-value {
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* ─── Scores ─── */
+        .score-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(74,111,92,0.1);
+            margin-top: 1.75rem;
+        }
+        .score-item { text-align: center; }
+        .score-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--accent-rust);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        .score-label {
+            font-size: 0.68rem;
+            color: var(--neutral-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .total-score {
+            text-align: center;
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 2px solid var(--accent-gold);
+        }
+        .total-score-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+        .total-score-label {
+            font-size: 0.82rem;
+            color: var(--neutral-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        /* ─── Recommendation ─── */
+        .recommendation-section {
+            background:
+                radial-gradient(ellipse 60% 70% at 15% 80%, rgba(201,169,97,0.1), transparent),
+                radial-gradient(ellipse 50% 60% at 85% 20%, rgba(184,92,58,0.06), transparent),
+                linear-gradient(160deg, var(--primary-forest) 0%, #2a5040 50%, var(--primary-sage) 100%);
+            padding: 5rem 3rem;
+            margin: 5rem 0;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .recommendation-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .recommendation-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .recommendation-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(12px);
+            padding: 3rem 3.5rem;
+            border-radius: var(--radius-md);
+            border-left: 5px solid var(--accent-gold);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-left: 5px solid var(--accent-gold);
+            position: relative;
+            z-index: 1;
+        }
+        .recommendation-badge {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            padding: 0.45rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+            margin-bottom: 1.75rem;
+        }
+        .recommendation-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            margin-bottom: 1.75rem;
+            font-weight: 600;
+        }
+        .recommendation-content p {
+            font-size: 0.92rem;
+            line-height: 1.9;
+            margin-bottom: 1.35rem;
+            color: rgba(255,255,255,0.92);
+        }
+        .word-count {
+            display: inline-block;
+            background: rgba(255,255,255,0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            margin-top: 1.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ─── Linking Block ─── */
+        .linking-block {
+            background: white;
+            padding: 2.25rem 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--primary-sage);
+            border: 1px solid rgba(74,111,92,0.08);
+            border-left: 5px solid var(--primary-sage);
+        }
+        .linking-block h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        .linking-block p {
+            color: var(--text-secondary);
+            line-height: 1.85;
+            font-size: 0.92rem;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            background: linear-gradient(160deg, #0d2319, var(--primary-forest) 80%);
+            color: rgba(255,255,255,0.75);
+            padding: 3.5rem 3rem;
+            text-align: center;
+            position: relative;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--accent-gold);
+            opacity: 0.5;
+        }
+        footer p {
+            font-size: 0.88rem;
+        }
+        footer p + p {
+            margin-top: 0.4rem;
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* ─── Scroll Reveal ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ─── Animations ─── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .solutions-grid { grid-template-columns: 1fr; }
+            .nav-container { padding: 1.15rem 2rem; }
+            .main-content { padding: 4rem 2rem; }
+        }
+        @media (max-width: 768px) {
+            .nav-menu { gap: 0.15rem; }
+            .nav-menu a { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+            .score-container { grid-template-columns: repeat(2, 1fr); }
+            .recommendation-content { padding: 2rem 1.75rem; }
+            .recommendation-section { padding: 3.5rem 2rem; margin: 3rem 0; }
+            .page-header { padding: 5rem 2rem 4rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <div class="brand-logo">National Trust</div>
+                <div class="brand-subtitle">Digital Strategy Project</div>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="insights.html">Phase 1</a></li>
+                <li><a href="ideation.html" class="active">Phase 2</a></li>
+                <li><a href="customer-journey.html">Phase 3</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>Ideation & Digital Solutions</h1>
+    </div>
+
+    <main class="main-content">
+
+    <!-- Phase 2 Structure -->
+    <section class="section-intro reveal" style="margin-bottom: 3.5rem;">
+        <h2>Phase 2: Ideation and Idea Evaluation</h2>
+        <p>This phase includes the Digital Ideas Evaluation Tool, APA v7 references, full ideation transcripts with AI tools, and a rationale for the selected solutions.</p>
+    </section>
+<div class="section-intro reveal" style="margin-bottom: 4rem;">
+            <h2>Four Evaluated Digital Solutions</h2>
+            <p>Through team brainstorming and AI-assisted ideation, we developed four customer-facing digital solutions evaluated across organizational relevance, business viability, customer value, and competitive edge.</p>
+        </div>
+<div class="solutions-grid">
+            <!-- Solution 1: National Trust Connect -->
+            <article class="solution-card selected reveal reveal-delay-1">
+                <div class="solution-header">
+                    <span class="solution-type selected">Human-Generated • Selected</span>
+                    <h4>National Trust Connect: The "Super-App" Ecosystem</h4>
+                    <p class="solution-tagline">A unified "Phys-gital" platform combining location-based AR with global streaming</p>
+                </div>
+                <div class="solution-content">
+                    <h5>Solution Overview</h5>
+                    <p>A unified "Phys-gital" platform that combines a location-based AR companion for on-site visitors with a global streaming service for remote access. This "Super App" allows users to gamify their physical visits (Pokemon-Go style) while also offering a "Netflix-style" library of 360-degree tours, nature streams, and wellbeing classes for home use.</p>
+                    
+                    <div class="solution-features">
+                        <h5 style="margin-bottom: 1rem; color: var(--primary-dark);">Key Features</h5>
+                        <ul>
+                            <li><strong>On-Site:</strong> AR "Wildlife Quest" with GPS challenges, virtual artifact collection, and digital rewards (e.g., free coffee)</li>
+                            <li><strong>Off-Site:</strong> "National Trust Stream" featuring live slow-TV nature feeds, expert history documentaries, and virtual wellbeing sessions</li>
+                            <li><strong>Unified Profile:</strong> Points earned physically (walking trails) unlock digital content (exclusive documentaries) and vice-versa</li>
+                        </ul>
+                    </div>
+
+                    <h5>Benefits</h5>
+                    <p>Solves the "Dual Crisis" of relevance and access simultaneously. Increases dwell time and youth engagement on-site through gamification, while monetising the global "armchair" audience who cannot visit physically. Creates a seamless loop where digital content drives physical visits and physical visits unlock digital rewards.</p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Strategic Challenge</div>
+                            <div class="info-value">Declining youth engagement & geographical limitations</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">New to Organization?</div>
+                            <div class="info-value">Yes</div>
+                        </div>
+                    </div>
+
+                    <h5>Key Data & Insight</h5>
+                    <p>Research shows a "hybrid paradox": Gen Z demands "active, gamified" physical experiences (Euromonitor) but also consumes high volumes of "digital wellness" content at home. Merging these creates a 360-degree value proposition that standalone apps cannot match.</p>
+
+                    <h5>Drawbacks</h5>
+                    <p>High complexity in app development (requires both high-fidelity video streaming and real-time geolocation AR). Risk of app "bloat" if features are not intuitive.</p>
+                    <div class="score-container">
+                        <div class="score-item">
+                            <span class="score-value">9</span>
+                            <span class="score-label">Org Relevance</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">9</span>
+                            <span class="score-label">Viability</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">9</span>
+                            <span class="score-label">Customer Value</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">9</span>
+                            <span class="score-label">Competitive Edge</span>
+                        </div>
+                    </div>
+
+                    <div class="total-score">
+                        <span class="total-score-value">36</span>
+                        <span class="total-score-label">Total Score / 40</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Solution 2: Flexi-Go -->
+            <article class="solution-card reveal">
+                <div class="solution-header">
+                    <span class="solution-type">Human-Generated</span>
+                    <h4>National Trust "Flexi-Go" (Pay-As-You-Go Smart Pass)</h4>
+                    <p class="solution-tagline">Digital smart wallet replacing rigid annual membership with flexible pay-per-visit</p>
+                </div>
+                <div class="solution-content">
+                    <h5>Solution Overview</h5>
+                    <p>A digital "smart wallet" that replaces the rigid annual membership with a flexible, pay-as-you-go model. Allows younger, budget-conscious users to pay for entry via mobile app on a per-visit basis, featuring dynamic pricing (discounts for off-peak/rainy days) and loyalty accumulation.</p>
+                    
+                    <div class="solution-features">
+                        <h5 style="margin-bottom: 1rem; color: var(--primary-dark);">Key Features</h5>
+                        <ul>
+                            <li>"Scan-and-Go" mobile QR entry (Oyster-card style)</li>
+                            <li>Dynamic pricing engine (lower prices on weekdays)</li>
+                            <li>Digital loyalty stamp card (e.g., "5th visit free")</li>
+                            <li>Integrated parking and café payments</li>
+                        </ul>
+                    </div>
+
+                    <h5>Benefits</h5>
+                    <p>Removes the high upfront cost barrier (£80+) for students and young adults. Captures the "spontaneous" visitor market who prefer last-minute bookings and monetises casual visitors who refuse to commit to a full annual contract.</p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Strategic Challenge</div>
+                            <div class="info-value">Rigid subscription model vs. commitment-phobic Gen Z</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">New to Organization?</div>
+                            <div class="info-value">Yes</div>
+                        </div>
+                    </div>
+
+                    <h5>Key Data & Insight</h5>
+                    <p>Customers—especially Gen Z—are increasingly opting for "pay-on-the-day" flexibility over annual commitments due to economic pressures. Additionally, 46% of bookings are now mobile, validating the need for a seamless digital entry system.</p>
+
+                    <h5>Drawbacks</h5>
+                    <p>Risk of "cannibalisation" (existing full members downgrading to this cheaper option), potentially leading to a short-term drop in guaranteed annual revenue.</p>
+                    <div class="score-container">
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Org Relevance</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Viability</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Customer Value</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Competitive Edge</span>
+                        </div>
+                    </div>
+
+                    <div class="total-score">
+                        <span class="total-score-value">32</span>
+                        <span class="total-score-label">Total Score / 40</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Solution 3: AI Personalised Companion -->
+            <article class="solution-card reveal">
+                <div class="solution-header">
+                    <span class="solution-type ai">AI-Generated</span>
+                    <h4>AI-Personalised Heritage Companion</h4>
+                    <p class="solution-tagline">Machine learning-powered digital companion personalising content and routes</p>
+                </div>
+                <div class="solution-content">
+                    <h5>Solution Overview</h5>
+                    <p>An AI-powered digital companion that personalises heritage content, routes, and storytelling based on user behaviour, preferences, and past interactions.</p>
+                    
+                    <div class="solution-features">
+                        <h5 style="margin-bottom: 1rem; color: var(--primary-dark);">Key Features</h5>
+                        <ul>
+                            <li>Machine-learning-based content recommendations</li>
+                            <li>Adaptive routes and narratives</li>
+                            <li>Personalised post-visit suggestions</li>
+                        </ul>
+                    </div>
+
+                    <h5>Benefits</h5>
+                    <p>Improves relevance and satisfaction, increases retention and membership conversion, and supports more tailored visitor journeys.</p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Strategic Challenge</div>
+                            <div class="info-value">One-size-fits-all visitor experiences</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">New to Organization?</div>
+                            <div class="info-value">Yes</div>
+                        </div>
+                    </div>
+
+                    <h5>Key Data & Insight</h5>
+                    <p>Consumers increasingly expect personalised digital experiences driven by AI and behavioural data.</p>
+
+                    <h5>Drawbacks</h5>
+                    <p>Data privacy concerns and dependency on high-quality user data.</p>
+                    <div class="score-container">
+                        <div class="score-item">
+                            <span class="score-value">7</span>
+                            <span class="score-label">Org Relevance</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Viability</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Customer Value</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">7</span>
+                            <span class="score-label">Competitive Edge</span>
+                        </div>
+                    </div>
+
+                    <div class="total-score">
+                        <span class="total-score-value">30</span>
+                        <span class="total-score-label">Total Score / 40</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Solution 4: AI Conservation Dashboard -->
+            <article class="solution-card reveal">
+                <div class="solution-header">
+                    <span class="solution-type ai">AI-Generated</span>
+                    <h4>AI Conservation Intelligence Dashboard</h4>
+                    <p class="solution-tagline">Predictive analytics platform for sustainable site management</p>
+                </div>
+                <div class="solution-content">
+                    <h5>Solution Overview</h5>
+                    <p>An AI-driven analytics platform that uses visitor, environmental, and weather data to predict overcrowding, environmental stress, and conservation risks at National Trust sites.</p>
+                    
+                    <div class="solution-features">
+                        <h5 style="margin-bottom: 1rem; color: var(--primary-dark);">Key Features</h5>
+                        <ul>
+                            <li>Predictive analytics and risk alerts</li>
+                            <li>Visitor flow optimisation</li>
+                            <li>Conservation decision support tools</li>
+                        </ul>
+                    </div>
+
+                    <h5>Benefits</h5>
+                    <p>Supports sustainable site management, protects natural assets, and improves operational decision-making.</p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Strategic Challenge</div>
+                            <div class="info-value">Balancing visitor access with conservation</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">New to Organization?</div>
+                            <div class="info-value">Yes</div>
+                        </div>
+                    </div>
+
+                    <h5>Key Data & Insight</h5>
+                    <p>AI-driven analytics are increasingly used in environmental management to predict risk and optimise resource allocation.</p>
+
+                    <h5>Drawbacks</h5>
+                    <p>Primarily internal-facing with limited direct visibility for visitors.</p>
+                    <div class="score-container">
+                        <div class="score-item">
+                            <span class="score-value">8</span>
+                            <span class="score-label">Org Relevance</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">7</span>
+                            <span class="score-label">Viability</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">6</span>
+                            <span class="score-label">Customer Value</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-value">7</span>
+                            <span class="score-label">Competitive Edge</span>
+                        </div>
+                    </div>
+
+                    <div class="total-score">
+                        <span class="total-score-value">28</span>
+                        <span class="total-score-label">Total Score / 40</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="flourish-embed flourish-radar" data-src="visualisation/27619260"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/27619260/thumbnail" width="100%" alt="radar visualization" /></noscript></div>
+        <section class="recommendation-section reveal">
+            <h2>Recommended Solution</h2>
+            <div class="recommendation-content">
+                <span class="recommendation-badge">Strategic Recommendation</span>
+                <h3>National Trust Connect: The Super-App Solution</h3>
+                
+                <p>National Trust Connect was selected as the preferred digital solution following comprehensive evaluation of all four proposed initiatives, as it uniquely addresses both critical strategic challenges facing the organization: declining youth engagement and over-reliance on physical visitation. This "phys-gital" super-app creates a unified ecosystem that seamlessly integrates on-site AR experiences with remote digital content, solving the dual crisis through a single, coherent platform rather than fragmented point solutions.</p>
+
+                <p>From a strategic perspective, the super-app architecture delivers unprecedented synergy between physical and digital engagement. The on-site AR Wildlife Quest component directly tackles the youth engagement crisis, transforming passive heritage observation into active, gamified exploration that resonates with Gen Z's preference for interactive experiences. Simultaneously, the National Trust Stream component monetizes global audiences who cannot visit physically—international supporters, mobility-impaired users, and time-poor professionals—creating a scalable revenue stream independent of site capacity constraints or weather conditions.</p>
+
+                <p>What distinguishes National Trust Connect from standalone solutions is its virtuous cycle design: physical visits earn points that unlock exclusive digital content (documentaries, behind-the-scenes footage), while digital engagement drives motivation for physical visitation to complete challenges and collect virtual artifacts. This bidirectional value flow creates stickiness that neither AR-only nor streaming-only solutions can achieve. Research validates this "hybrid paradox"—Gen Z simultaneously demands active, gamified physical experiences while consuming high volumes of digital wellness content at home. The super-app captures both behaviors within a unified brand experience.</p>
+
+                <p>From a business viability standpoint, the unified architecture enables significant operational efficiencies. A single app platform reduces development and maintenance costs compared to multiple discrete systems, while the shared user profile generates comprehensive behavioral data across both physical and digital touchpoints. This 360-degree view of member preferences—what sites they visit, what content they stream, what challenges they complete—enables unprecedented personalization and targeted engagement that strengthens retention and conversion metrics across the entire membership funnel.</p>
+
+                <p>Critically, National Trust Connect positions the organization for long-term competitive advantage. While rivals like English Heritage and Historic Royal Palaces invest in either physical or digital improvements, the super-app leapfrogs this binary choice by creating an integrated ecosystem that competitors will struggle to replicate. The platform's ability to deliver immediate customer value (gamified exploration), generate recurring revenue (streaming subscriptions), and collect rich behavioral data (personalization engine) establishes the National Trust not merely as a heritage site operator, but as a comprehensive cultural lifestyle brand serving audiences across the physical-digital spectrum.</p>
+
+                <div class="word-count">Rationale Word Count: 300 words</div>
+            </div>
+        </section>
+    </main>
+<section>
+    <div style="background:white; padding:2.25rem 2.5rem; max-width:900px; margin:0 auto; border-radius:8px; box-shadow:var(--shadow-md); border-left:6px solid var(--primary-sage);">
+        <h3 style="font-family:'Playfair Display', serif; color:var(--primary-dark); margin-bottom:1rem;">Phase 2 – Linking to Phase 3</h3>
+        <p style="color:var(--text-secondary); line-height:1.85; font-size:0.95rem;">Phase 2 translates diagnosis into structured opportunity design. Building on the strategic tensions identified in Phase 1, alternative digital initiatives are generated and refined. Each concept is assessed using explicit evaluation criteria including feasibility, scalability, financial sustainability, user value, and alignment with mission objectives. The digital ideas evaluation tool formalises this comparison and makes trade offs transparent rather than intuitive. By narrowing multiple concepts into a single prioritised direction, this phase ensures that selection is logically justified and strategically coherent. The outcome is not simply a preferred idea but a defensible strategic choice supported by evidence. This validated direction then becomes the foundation for the detailed operationalisation and experience design developed in Phase 3.</p>
+    </div>
+    <br>
+</section>
+
+<footer>
+        <p>Phase 2: Ideation & Idea Evaluation | Digital Solutions Framework</p>
+        <p style="margin-top: 0.5rem;">UCL MSIN0051 Digital Strategy & Transformation | © 2026</p>
+    </footer>
+
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
